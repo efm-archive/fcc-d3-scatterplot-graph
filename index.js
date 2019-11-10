@@ -17,7 +17,7 @@ bodySvg
   .append('text')
   .attr('id', 'title')
   .attr('x', width / 2)
-  .attr('y', 20)
+  .attr('y', -20)
   .attr('text-anchor', 'middle')
   .style('font-size', '14px')
   .style('font-family', 'sans-serif')
@@ -68,6 +68,16 @@ d3.json(
       .append('g')
       .attr('id', 'y-axis')
       .call(axisY);
+
+    const dot = d3
+      .select('svg')
+      .selectAll('circle')
+      .data(json)
+      .enter()
+      .append('circle')
+      .attr('r', '4px')
+      .attr('cx', d => scaleX(d.Year) + margin.left)
+      .attr('cy', d => scaleY(d.Seconds) + margin.top);
   })
   .catch(err => {
     console.error(err);
