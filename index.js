@@ -36,10 +36,10 @@ d3.json(
       .domain([
         d3.min(json, d => {
           // console.log('d.Year :', d.Year);
-          return d.Year;
+          return d.Year - 1;
         }),
         d3.max(json, d => {
-          return d.Year;
+          return d.Year + 1;
         })
       ])
       .range([0, width]);
@@ -53,10 +53,12 @@ d3.json(
           return d.Seconds / 60;
         })
       ])
-      .range([height, 0]);
+      .range([0, height]);
 
-    const axisX = d3.axisBottom(scaleX);
-    const axisY = d3.axisLeft(scaleY);
+    const axisX = d3.axisBottom(scaleX).tickFormat(d3.format('d'));
+    // const axisX = d3.axisBottom(scaleX).tickFormat(d3.time.format('%a %d'));
+    const formatTime = d3.timeFormat('%M:%S');
+    const axisY = d3.axisLeft(scaleY).tickFormat(formatTime);
 
     bodySvg
       .append('g')
@@ -79,20 +81,22 @@ d3.json(
       .attr('fill', 'red')
       .attr('r', '4px')
       .attr('data-xvalue', d => {
-        console.log('d.Year :', d.Year);
-        const year = d.Year;
-        console.log('year:', year);
-        const newDate = new Date(year, 0);
-        console.log('newDnew :', newDate);
+        const newDate = new Date(d.Year, 0);
 
-        return d.Year;
-        // d.Seconds
+        return newDate;
       })
       .attr('data-yvalue', d => {
-        const minutes = d.Seconds / 60;
-        // console.log('d.Seconds /60 :', d.Seconds / 60);
-        return;
-        // d.Seconds
+        const minutes = Math.floor(d.Seconds / 60);
+        const seconds = d.Seconds % 60;
+        // const time = d.Time;
+        // console.log('minutes :', minutes);
+        // console.log('seconds :', seconds);
+        // console.log('time :', time);
+        // const formatMinute = d3.timeFormat('%M:%S');
+        const newDateObj = new Date(1970, 0, 1, 0, minutes, seconds);
+        console.log('newDateObj :', newDateObj);
+
+        return minutes;
       })
       .attr('cx', d => scaleX(d.Year) + margin.left)
       .attr('cy', d => scaleY(d.Seconds / 60) + margin.top);
