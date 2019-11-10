@@ -47,10 +47,10 @@ d3.json(
       .scaleLinear()
       .domain([
         d3.min(json, d => {
-          return d.Seconds;
+          return d.Seconds / 60;
         }),
         d3.max(json, d => {
-          return d.Seconds;
+          return d.Seconds / 60;
         })
       ])
       .range([height, 0]);
@@ -75,9 +75,27 @@ d3.json(
       .data(json)
       .enter()
       .append('circle')
+      .attr('class', 'dot')
+      .attr('fill', 'red')
       .attr('r', '4px')
+      .attr('data-xvalue', d => {
+        console.log('d.Year :', d.Year);
+        const year = d.Year;
+        console.log('year:', year);
+        const newDate = new Date(year, 0);
+        console.log('newDnew :', newDate);
+
+        return d.Year;
+        // d.Seconds
+      })
+      .attr('data-yvalue', d => {
+        const minutes = d.Seconds / 60;
+        // console.log('d.Seconds /60 :', d.Seconds / 60);
+        return;
+        // d.Seconds
+      })
       .attr('cx', d => scaleX(d.Year) + margin.left)
-      .attr('cy', d => scaleY(d.Seconds) + margin.top);
+      .attr('cy', d => scaleY(d.Seconds / 60) + margin.top);
   })
   .catch(err => {
     console.error(err);
